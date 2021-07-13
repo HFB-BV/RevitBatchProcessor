@@ -104,11 +104,13 @@ def RunBatchTaskScript(scriptFilePath):
     cloudProjectId = None
     cloudModelId = None
     isCloudModel = revit_script_util.IsCloudModel()
+    isRevitServerModel = False
     if isCloudModel:
         cloudProjectId = revit_script_util.GetCloudProjectId()
         cloudModelId = revit_script_util.GetCloudModelId()
     else:
         centralFilePath = revit_script_util.GetRevitFilePath()
+        isRevitServerModel = path_util.IsRevitServerPath(centralFilePath)
     openInUI = revit_script_util.GetOpenInUI()
     enableDataExport = revit_script_util.GetEnableDataExport()
     dataExportFolderPath = revit_script_util.GetDataExportFolderPath()
@@ -129,7 +131,7 @@ def RunBatchTaskScript(scriptFilePath):
             output()
             output("\t" + dataExportFolderPath)
         aborted = True
-    elif not isCloudModel and not path_util.FileExists(centralFilePath):
+    elif not isCloudModel and not path_util.FileExists(centralFilePath) and not isRevitServerModel:
         output()
         output("ERROR: Revit project file does not exist!")
         if not str.IsNullOrWhiteSpace(centralFilePath):
@@ -182,6 +184,12 @@ def RunBatchTaskScript(scriptFilePath):
                     output()
                     output("The file is a Central Model file.")
                     isCentralModel = True
+                if centralFileOpenOption == BatchRvt.CentralFileOpenOption.CreateNewLocal:
+                    openCreateNewLocal = True
+            elif isRevitServerModel:
+                output()
+                output("The file is a Revit Server Model.")
+                isCentralModel = True
                 if centralFileOpenOption == BatchRvt.CentralFileOpenOption.CreateNewLocal:
                     openCreateNewLocal = True
             elif path_util.HasFileExtension(centralFilePath, ".rfa"):
@@ -367,6 +375,7 @@ def DoRevitSessionProcessing(
             .OrderBy(lambda scriptData: scriptData.ProgressNumber.GetValue())
             .ToList()
         )
+
     if len(scriptDatas) > 0:
         revitProcessingOption = GetRevitProcessingOptionForSession(scriptDatas)
         if revitProcessingOption == BatchRvt.RevitProcessingOption.BatchRevitFileProcessing:
@@ -405,6 +414,8 @@ def Main():
     batchRvtProcessUniqueId = script_environment.GetBatchRvtProcessUniqueId(environmentVariables)
     testModeFolderPath = script_environment.GetTestModeFolderPath(environmentVariables)
     global_test_mode.InitializeGlobalTestMode(testModeFolderPath)
+
+    # Note: Do not put output statements above this line
 
     if outputPipeHandleString is not None and scriptFilePath is not None:
 

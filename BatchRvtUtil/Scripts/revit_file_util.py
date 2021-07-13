@@ -18,12 +18,14 @@
 #
 #
 
+import os
 import clr
 import System
 
 from System import Environment
 from System.IO import Path
 import path_util
+import script_util
 
 clr.AddReference("RevitAPI")
 from Autodesk.Revit.DB import *
@@ -110,7 +112,11 @@ def ParseWorksetConfigurationOption(closeAllWorksets, worksetConfig):
 
 def ToModelPath(modelPath):
     if isinstance(modelPath, str):
-        modelPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(modelPath)
+        if modelPath[:6] == "RSN://":
+            splitpath = modelPath[6:].split('/')
+            modelPath = ServerPath(splitpath[0], os.path.join(*splitpath[1:]))
+        else:
+            modelPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(modelPath)
     return modelPath
 
 def ToUserVisiblePath(modelPath):

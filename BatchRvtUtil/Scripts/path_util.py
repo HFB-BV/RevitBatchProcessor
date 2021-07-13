@@ -48,6 +48,9 @@ def HasFileExtension(filePath, extension):
 def FileExists(filePath):
     return File.Exists(filePath)
 
+def IsRevitServerPath(filePath):
+    return filePath[:6] == "RSN://"
+
 def GetFullPath(path):
     return Path.GetFullPath(path)
 

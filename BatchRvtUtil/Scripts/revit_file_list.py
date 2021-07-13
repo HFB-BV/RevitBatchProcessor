@@ -131,6 +131,7 @@ class RevitCloudModelInfo:
 class RevitFileInfo():
     def __init__(self, revitFilePath):
         self.cloudModelInfo = RevitCloudModelInfo(revitFilePath)
+        self.hasRevitServerPath = (revitFilePath[:6] == "RSN://")
         pathException = None
         try:
             revitFilePath = path_util.GetFullPath(revitFilePath)
@@ -146,6 +147,9 @@ class RevitFileInfo():
 
     def IsCloudModel(self):
         return self.GetRevitCloudModelInfo().IsValid()
+        
+    def IsRevitServerModel(self):
+        return self.hasRevitServerPath
 
     def GetRevitCloudModelInfo(self):
         return self.cloudModelInfo
@@ -237,6 +241,9 @@ class SupportedRevitFileInfo():
 
     def IsCloudModel(self):
         return self.GetRevitFileInfo().IsCloudModel()
+        
+    def IsRevitServerModel(self):
+        return self.GetRevitFileInfo().IsRevitServerModel()
 
     def GetRevitCloudModelInfo(self):
         return self.GetRevitFileInfo().GetRevitCloudModelInfo()

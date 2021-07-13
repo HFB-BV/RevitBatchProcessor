@@ -71,28 +71,31 @@ def GetSupportedRevitFiles(batchRvtConfig):
     supportedRevitFileList = None
 
     revitFileListData = batchRvtConfig.ReadRevitFileListData(Output)
-
     if revitFileListData is not None:
         supportedRevitFileList = list(
                 revit_file_list.SupportedRevitFileInfo(revitFilePathData)
                 for revitFilePathData in revitFileListData
             )
-
+        
         nonExistentRevitFileList = list(
                 supportedRevitFileInfo
                 for supportedRevitFileInfo in supportedRevitFileList
                 if (
                         not supportedRevitFileInfo.IsCloudModel()
                         and
+                        not supportedRevitFileInfo.IsRevitServerModel()
+                        and
                         not RevitFileExists(supportedRevitFileInfo)
                     )
             )
-
+        
         supportedRevitFileList = list(
                 supportedRevitFileInfo
                 for supportedRevitFileInfo in supportedRevitFileList
                 if (
                         supportedRevitFileInfo.IsCloudModel()
+                        or
+                        supportedRevitFileInfo.IsRevitServerModel()
                         or
                         RevitFileExists(supportedRevitFileInfo)
                    )
@@ -110,6 +113,8 @@ def GetSupportedRevitFiles(batchRvtConfig):
                 if (
                         not supportedRevitFileInfo.IsCloudModel()
                         and
+                        not supportedRevitFileInfo.IsRevitServerModel()
+                        and
                         not HasSupportedRevitFilePath(supportedRevitFileInfo)
                     )
             )
@@ -121,6 +126,8 @@ def GetSupportedRevitFiles(batchRvtConfig):
                         (
                             supportedRevitFileInfo.IsCloudModel()
                             or
+                            supportedRevitFileInfo.IsRevitServerModel()
+                            or
                             RevitFileExists(supportedRevitFileInfo)
                         )
                         and
@@ -131,20 +138,22 @@ def GetSupportedRevitFiles(batchRvtConfig):
                         (
                             supportedRevitFileInfo.IsCloudModel()
                             or
+                            supportedRevitFileInfo.IsRevitServerModel()
+                            or
                             HasSupportedRevitFilePath(supportedRevitFileInfo)
                         )
                     )
             ).OrderBy(
                     lambda supportedRevitFileInfo:
                         GetRevitFileSize(supportedRevitFileInfo)
-                        if not supportedRevitFileInfo.IsCloudModel()
+                        if not (supportedRevitFileInfo.IsCloudModel() or supportedRevitFileInfo.IsRevitServerModel())
                         else System.Int64(0) # dummy file size value for Cloud models
                 ).ToList()
 
         nonExistentCount = len(nonExistentRevitFileList)
         unsupportedCount = len(unsupportedRevitFileList)
         unsupportedRevitFilePathCount = len(unsupportedRevitFilePathRevitFileList)
-
+        
         if nonExistentCount > 0:
             Output()
             Output("WARNING: The following Revit Files do not exist (" + str(nonExistentCount) + "):")

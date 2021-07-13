@@ -107,7 +107,7 @@ namespace BatchRvtUtil
             }
 
             var psi = new ProcessStartInfo(Path.Combine(baseDirectory, "BatchRvt.exe"));
-            
+
             psi.UseShellExecute = false;
             psi.WorkingDirectory = baseDirectory;
             psi.Arguments = ConstructCommandLineArguments(batchRvtOptions);
@@ -156,7 +156,6 @@ namespace BatchRvtUtil
             ScriptUtil.AddPythonStandardLibrary(mainModuleScope);
 
             var scriptSource = ScriptUtil.CreateScriptSourceFromFile(engine, monitorScriptFilePath);
-
             scriptSource.Execute(mainModuleScope);
 
             return;
