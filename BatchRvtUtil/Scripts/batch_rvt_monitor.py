@@ -550,10 +550,13 @@ def Main():
             Output("\t" + plainTextLogFilePath)
     
     Output()
-    return
+    
+    if aborted:
+        return 1
+    return 0
 
 try:
-    Main()
+    System.Environment.Exit(Main())
 except Exception, e:
     exception_util.LogOutputErrorDetails(e, Output)
     raise

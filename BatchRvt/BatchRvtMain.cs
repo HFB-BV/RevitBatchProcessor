@@ -36,7 +36,7 @@ namespace BatchRvtCommand
         private const int BufferHeight = WindowHeight * 50;
 
         [STAThread]
-        private static void Main(string[] args)
+        private static int Main(string[] args)
         {
             Application.EnableVisualStyles();
 
@@ -46,9 +46,9 @@ namespace BatchRvtCommand
             }
 
             var batchRvtFolderPath = GetExecutableFolderPath();
-            BatchRvtUtil.BatchRvt.ExecuteMonitorScript(batchRvtFolderPath);
+            int exitstatus = BatchRvtUtil.BatchRvt.ExecuteMonitorScript(batchRvtFolderPath);
 
-            return;
+            return exitstatus;
         }
 
         private static void InitConsole()

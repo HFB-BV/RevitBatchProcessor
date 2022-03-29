@@ -121,7 +121,7 @@ namespace BatchRvtUtil
             return batchRvtProcess;
         }
 
-        public static void ExecuteMonitorScript(
+        public static int ExecuteMonitorScript(
                 string batchRvtFolderPath,
                 CommandSettings.Data commandSettingsData = null
             )
@@ -156,9 +156,9 @@ namespace BatchRvtUtil
             ScriptUtil.AddPythonStandardLibrary(mainModuleScope);
 
             var scriptSource = ScriptUtil.CreateScriptSourceFromFile(engine, monitorScriptFilePath);
-            scriptSource.Execute(mainModuleScope);
+            int result = scriptSource.Execute(mainModuleScope);
 
-            return;
+            return result;
         }
 
         public static string GetDataFolderPath()
