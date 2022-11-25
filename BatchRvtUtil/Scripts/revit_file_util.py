@@ -190,7 +190,7 @@ def IsRvt2021_OrNewer(application):
     try:
         return int(application.VersionNumber) > 2020
     except:
-        return false
+        return False
 
 def OpenCloudDocument(application, cloudProjectId, cloudModelId, closeAllWorksets=False, worksetConfig=None, audit=False):
     if IsRvt2021_OrNewer(application):
