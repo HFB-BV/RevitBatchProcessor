@@ -44,7 +44,7 @@ def IsBatchRvtProcessRunning(batchRvtProcessUniqueId):
         isTargetProcess = False
         try:
             isTargetProcess = (GetUniqueIdForProcess(process) == batchRvtProcessUniqueId)
-        except Exception, e:
+        except Exception as e:
             isTargetProcess = False
         return isTargetProcess
     batchRvtProcess = Process.GetProcesses().FirstOrDefault(IsBatchRvtProcess)

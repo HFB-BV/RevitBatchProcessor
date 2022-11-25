@@ -77,7 +77,7 @@ def RunSingleTaskScript(scriptFilePath):
                 output,
                 showMessageBoxOnTaskError
             )
-    except Exception, e:
+    except Exception as e:
         aborted = True
         raise
     finally:
@@ -263,7 +263,7 @@ def RunBatchTaskScript(scriptFilePath):
                             File.Delete(localFilePath)
                             output()
                             output("Local file deleted.")
-                    except Exception, e:
+                    except Exception as e:
                         output()
                         output("WARNING: failed to delete the local file!")
                     path_util.CreateDirectoryForFilePath(localFilePath)
@@ -290,7 +290,7 @@ def RunBatchTaskScript(scriptFilePath):
                         )
                 else:
                     result = revit_script_util.RunDocumentAction(uiapp, openInUI, centralFilePath, auditOnOpening, processDocument, output)
-        except Exception, e:
+        except Exception as e:
             aborted = True
             snapshotError = exception_util.GetExceptionDetails(e)
             raise
@@ -305,7 +305,7 @@ def RunBatchTaskScript(scriptFilePath):
                         File.Delete(localFilePath)
                         output()
                         output("Local file deleted.")
-                except Exception, e:
+                except Exception as e:
                     output()
                     output("WARNING: failed to delete the local file!")
 

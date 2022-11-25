@@ -161,7 +161,7 @@ def GetEnvironmentVariables():
     # NOTE: Have encountered (at least once) a NullReferenceException upon accessing the EnvironmentVariables property!
     try:
         environmentVariables = Process.GetCurrentProcess().StartInfo.EnvironmentVariables
-    except NullReferenceException, e:
+    except NullReferenceException as e:
         environmentVariables = None
     return environmentVariables
 
