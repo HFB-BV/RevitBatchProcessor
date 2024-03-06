@@ -176,7 +176,9 @@ namespace BatchRvtUtil
                     RevitVersion.SupportedRevitVersion.Revit2021 :
                     useRevitVersion == UseRevitVersion.Revit2022 ?
                     RevitVersion.SupportedRevitVersion.Revit2022 :
-                    RevitVersion.SupportedRevitVersion.Revit2023
+                    useRevitVersion == UseRevitVersion.Revit2023 ?
+                    RevitVersion.SupportedRevitVersion.Revit2023 :
+                    RevitVersion.SupportedRevitVersion.Revit2024
 
                 );
 
@@ -311,7 +313,8 @@ namespace BatchRvtUtil
                 Revit2020 = 6,
                 Revit2021 = 7,
                 Revit2022 = 8,
-                Revit2023 = 9
+                Revit2023 = 9,
+                Revit2024 = 10
         }
     }
 }
