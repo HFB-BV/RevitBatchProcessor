@@ -1,5 +1,6 @@
 
 <span style="color:green; font-size:16px"> ATTENTION: Due to other commitments the original author of Revit Batch Processor (@DanRumery) is unable to support RBP for the future. For questions please seek help from the community such as the Dynamo and Revit API forums.
+
 </span>
 
 # Revit Batch Processor (RBP)
@@ -8,11 +9,9 @@ Fully automated batch processing of Revit files with your own Python or Dynamo t
 
 ## Latest version (NEW)
 
-[Installer for Revit Batch Processor v1.9.0 beta](https://github.com/bvn-architecture/RevitBatchProcessor/releases/download/v1.9.0-beta/RevitBatchProcessorSetup_v1.9.0.exe)
+Version 1.11.0 beta release is available, which includes support for Revit 2024. [Installer is here](https://github.com/bvn-architecture/RevitBatchProcessor/releases/download/v1.11.0-beta/RevitBatchProcessorSetup_v1.11.0.exe)
 
-Version 1.9.0 beta release is available, which adds support for Revit 2023.
-
-See the [Releases](https://github.com/bvn-architecture/RevitBatchProcessor/releases) page for more information.
+See the [Releases](https://github.com/bvn-architecture/RevitBatchProcessor/releases) page for [v1.11.0-beta release notes](https://github.com/bvn-architecture/RevitBatchProcessor/releases/tag/v1.11.0-beta).
 
 ## RBP Sample Scripts
 
@@ -38,7 +37,7 @@ This tool doesn't _do_ any of these things, but it _allows_ you to do them:
 - Testing your own Revit API scripts and Revit addins against a variety of Revit models and families in an automated manner.
 - Essentially anything you can do to one Revit file with the Revit API or a Dynamo script, you can now do to many!
 
-![Screenshot of the UI](BatchRvt_Screenshot.1.5.1.png)
+![Screenshot of the UI](BatchRvt_Screenshot.png)
 
 ## Features
 
@@ -63,7 +62,7 @@ This tool enables you to do things with Revit files on a very large scale. Becau
 
 ## Installer
 
-[Installer for Revit Batch Processor v1.9.0 beta](https://github.com/bvn-architecture/RevitBatchProcessor/releases/download/v1.9.0-beta/RevitBatchProcessorSetup_v1.9.0.exe)
+[Installer for Revit Batch Processor v1.11.0 beta](https://github.com/bvn-architecture/RevitBatchProcessor/releases/download/v1.11.0-beta/RevitBatchProcessorSetup_v1.11.0.exe)
 
 The Revit Batch Processor (GUI) application will appear in the Start menu after the installation.
 
@@ -71,7 +70,7 @@ The Revit Batch Processor (GUI) application will appear in the Start menu after 
 
 Open the solution file RevitBatchProcessor.sln in Visual Studio 2017 or later and run Build Solution (F6).
 
-Revit addins will be automatically deployed to the Addins folder for each available Revit version [2015-2023]. e.g. %APPDATA%\Autodesk\Revit\Addins\2019
+Revit addins will be automatically deployed to the Addins folder for each available Revit version [2015-2025]. e.g. %APPDATA%\Autodesk\Revit\Addins\2019
 
 The BatchRvtGUI project is the GUI that drives the underlying engine (the BatchRvt project). Once built, run BatchRvtGUI.exe to start the Revit Batch Processor GUI.
 
@@ -79,9 +78,9 @@ When rebuilding, please make sure all Revit applications are closed before attem
 
 # Requirements
 
-- At least one version of Revit installed. Currently supports Revit versions 2015 through 2023.
+- At least one version of Revit installed. Currently supports Revit versions 2015 through 2025.
 - To build from source code, Visual Studio version 2017 or later.
-- If executing Dynamo scripts from the task script, Dynamo 1.3+ installed (currently supports Revit versions 2016 through 2023). NOTE: The Dynamo script MUST have been saved with the 'Automatic' Run mode. There **MUST BE EXACTLY ONE VERSION OF DYNAMO INSTALLED** for each version of Revit.
+- If executing Dynamo scripts from the task script, Dynamo 1.3+ installed (currently supports Revit versions 2016 through 2025). NOTE: The Dynamo script MUST have been saved with the 'Automatic' Run mode. There **MUST BE EXACTLY ONE VERSION OF DYNAMO INSTALLED** for each version of Revit.
 - If using an Excel file for the Revit File List, Microsoft Office / Excel installed.
 
 # License
@@ -110,9 +109,10 @@ Daniel Rumery [@DanRumery](https://github.com/DanRumery) (Original / Primary Aut
 
 - Vincent Cadoret [@vinnividivicci](https://github.com/vinnividivicci)
 - Ryan Schwartz [@RyanSchw](https://github.com/RyanSchw)
-- Dimitar Venkov [@dimven](https://github.com/dimven)
+- Dimitar Venkov [@dimven](https://github.com/dimven) (Upgraded support for Revit 2025) 
 - Nicklas Ostergaard [@NicklasOestergaard](https://github.com/NicklasOestergaard) (Upgraded support for Revit 2022)
 - Peter Smith [@punderscoresmithuk](https://github.com/punderscoresmithuk) (Upgraded support for Revit 2023)
+- Maciej Wypych [@maciejwypych](https://github.com/maciejwypych) (Upgraded support for Revit 2024 and more)
 
 # Usage
 

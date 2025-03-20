@@ -17,115 +17,111 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-
 using System.IO;
-using System.Diagnostics;
 
-namespace BatchRvt.ScriptHost
+namespace BatchRvt.ScriptHost;
+
+public static class ScriptHostUtil
 {
-    public static class ScriptHostUtil
+    // NOTE: must be the same as BATCH_RVT_ERROR_WINDOW_TITLE defined in script_host_error.py.
+    public const string BATCH_RVT_ERROR_WINDOW_TITLE = "BatchRvt Script Error";
+
+    private const string BatchScriptHostFilename = "revit_script_host.py";
+    private const string BATCHRVT_SCRIPTS_FOLDER_PATH__ENVIRONMENT_VARIABLE_NAME = "BATCHRVT__SCRIPTS_FOLDER_PATH";
+
+    public static void ExecuteBatchScriptHost(
+        string pluginFolderPath,
+        object uiApplicationObject
+    )
     {
-        // NOTE: must be the same as BATCH_RVT_ERROR_WINDOW_TITLE defined in script_host_error.py.
-        public const string BATCH_RVT_ERROR_WINDOW_TITLE = "BatchRvt Script Error";
+        var environmentVariables = GetEnvironmentVariables();
 
-        private const string BatchScriptHostFilename = "revit_script_host.py";
-        private const string BATCHRVT_SCRIPTS_FOLDER_PATH__ENVIRONMENT_VARIABLE_NAME = "BATCHRVT__SCRIPTS_FOLDER_PATH";
+        if (environmentVariables == null) return;
+        var batchRvtScriptsFolderPath = GetBatchRvtScriptsFolderPath(environmentVariables);
 
-        public static void ExecuteBatchScriptHost(
-                string pluginFolderPath,
-                object uiApplicationObject
-            )
-        {
-            var environmentVariables = GetEnvironmentVariables();
+        if (batchRvtScriptsFolderPath == null) return;
+        var engine = ScriptUtil.CreatePythonEngine();
 
-            if (environmentVariables != null)
+        ScriptUtil.AddBuiltinVariables(
+            engine,
+            new Dictionary<string, object>
             {
-                var batchRvtScriptsFolderPath = GetBatchRvtScriptsFolderPath(environmentVariables);
+                { "__revit__", uiApplicationObject },
+            });
 
-                if (batchRvtScriptsFolderPath != null)
-                {
-                    var engine = ScriptUtil.CreatePythonEngine();
+        var mainModuleScope = ScriptUtil.CreateMainModule(engine);
 
-                    ScriptUtil.AddBuiltinVariables(
-                            engine,
-                            new Dictionary<string, object> {
-                            { "__revit__", uiApplicationObject },
-                        });
+        var pluginFullFolderPath = Path.GetFullPath(pluginFolderPath);
 
-                    var mainModuleScope = ScriptUtil.CreateMainModule(engine);
+        var scriptHostFilePath = Path.Combine(batchRvtScriptsFolderPath, BatchScriptHostFilename);
+        var batchRvtFolderPath = GetBatchRvtFolderPath(environmentVariables);
 
-                    var pluginFullFolderPath = Path.GetFullPath(pluginFolderPath);
-                    var scriptHostFilePath = Path.Combine(batchRvtScriptsFolderPath, BatchScriptHostFilename);
-                    var batchRvtFolderPath = GetBatchRvtFolderPath(environmentVariables);
-
-                    ScriptUtil.AddSearchPaths(engine, new[] {
-                        batchRvtScriptsFolderPath,
-                        pluginFullFolderPath,
-                        batchRvtFolderPath
-                    });
-
-                    ScriptUtil.AddPythonStandardLibrary(mainModuleScope);
-
-                    var scriptSource = ScriptUtil.CreateScriptSourceFromFile(engine, scriptHostFilePath);
-
-                    scriptSource.Execute(mainModuleScope);
-                }
-
-                return;
-            }
-        }
-
-        private static string GetParentFolder(string folderPath)
+        ScriptUtil.AddSearchPaths(engine, new[]
         {
-            return Directory.GetParent((folderPath)).FullName;
-        }
+            batchRvtScriptsFolderPath,
+            pluginFullFolderPath,
+            batchRvtFolderPath
+        });
 
-        private static string RemoveTrailingDirectorySeparators(string folderPath)
+        ScriptUtil.AddPythonStandardLibrary(mainModuleScope);
+
+        var scriptSource = ScriptUtil.CreateScriptSourceFromFile(engine, scriptHostFilePath);
+
+        scriptSource.Execute(mainModuleScope);
+    }
+
+    private static string GetParentFolder(string folderPath)
+    {
+        return Directory.GetParent(folderPath)?.FullName;
+    }
+
+    private static string RemoveTrailingDirectorySeparators(string folderPath)
+    {
+        return folderPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+    }
+
+    private static string GetBatchRvtFolderPath(StringDictionary environmentVariables)
+    {
+        var batchRvtScriptsFolderPath = GetBatchRvtScriptsFolderPath(environmentVariables);
+
+        return batchRvtScriptsFolderPath != null
+            ? GetParentFolder(RemoveTrailingDirectorySeparators(batchRvtScriptsFolderPath))
+            : null;
+    }
+
+    private static string GetBatchRvtScriptsFolderPath(StringDictionary environmentVariables)
+    {
+        return GetEnvironmentVariable(
+            environmentVariables,
+            BATCHRVT_SCRIPTS_FOLDER_PATH__ENVIRONMENT_VARIABLE_NAME
+        );
+    }
+
+    private static string GetEnvironmentVariable(StringDictionary environmentVariables, string variableName)
+    {
+        return environmentVariables[variableName];
+    }
+
+    private static StringDictionary GetEnvironmentVariables()
+    {
+        try
         {
-            return folderPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-        }
-
-        public static string GetBatchRvtFolderPath(StringDictionary environmentVariables)
-        {
-            var batchRvtScriptsFolderPath = GetBatchRvtScriptsFolderPath(environmentVariables);
-
-            return (batchRvtScriptsFolderPath != null) ?
-                GetParentFolder(RemoveTrailingDirectorySeparators(batchRvtScriptsFolderPath)) :
-                null;
-        }
-
-        public static string GetBatchRvtScriptsFolderPath(StringDictionary environmentVariables)
-        {
-            return GetEnvironmentVariable(
-                    environmentVariables,
-                    BATCHRVT_SCRIPTS_FOLDER_PATH__ENVIRONMENT_VARIABLE_NAME
-                );
-        }
-
-        private static string GetEnvironmentVariable(StringDictionary environmentVariables, string variableName)
-        {
-            return environmentVariables[variableName];
-        }
-
-        public static StringDictionary GetEnvironmentVariables()
-        {
-            StringDictionary environmentVariables = null;
-
-            // NOTE: Have encountered (at least once) a NullReferenceException upon accessing the EnvironmentVariables property!
-            try
+            var environmentVariables = new StringDictionary();
+            var ev = Environment.GetEnvironmentVariables();
+            foreach (string key in ev.Keys)
             {
-                environmentVariables = Process.GetCurrentProcess().StartInfo.EnvironmentVariables;
-            }
-            catch (NullReferenceException e)
-            {
-                environmentVariables = null;
+                environmentVariables[key] = ev[key].ToString();
             }
 
             return environmentVariables;
+        }
+        catch (NullReferenceException)
+        {
+            return null;
         }
     }
 }
