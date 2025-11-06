@@ -54,6 +54,8 @@ public class BatchRvtSettings : IPersistent
     public readonly BooleanSetting IfNotAvailableUseMinimumAvailableRevitVersion =
         new("ifNotAvailableUseMinimumAvailableRevitVersion");
 
+    public readonly BooleanSetting KeepFileListOrdering = new("keepFileListOrdering");
+
     public readonly BooleanSetting OpenInUI = new("openInUI");
 
     public readonly PersistentSettings persistentSettings;
@@ -119,7 +121,8 @@ public class BatchRvtSettings : IPersistent
                 BatchRevitTaskRevitVersion,
                 OpenInUI,
                 AuditOnOpening,
-                ShowAdvancedSettings
+                ShowAdvancedSettings,
+                KeepFileListOrdering
             }
         );
     }

@@ -143,7 +143,10 @@ def GetSupportedRevitFiles(batchRvtConfig):
                             HasSupportedRevitFilePath(supportedRevitFileInfo)
                         )
                     )
-            ).OrderBy(
+            )
+
+        if not batchRvtConfig.KeepFileListOrdering:
+            supportedRevitFileList = supportedRevitFileList.OrderBy(
                     lambda supportedRevitFileInfo:
                         GetRevitFileSize(supportedRevitFileInfo)
                         if not (supportedRevitFileInfo.IsCloudModel() or supportedRevitFileInfo.IsRevitServerModel())

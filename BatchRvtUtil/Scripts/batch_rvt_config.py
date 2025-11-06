@@ -95,6 +95,7 @@ class BatchRvtConfig:
         self.BatchRevitTaskRevitVersion = None
         self.AuditOnOpening = False
         self.OpenInUI = False
+        self.KeepFileListOrdering = False
 
         return
 
@@ -201,6 +202,7 @@ def ConfigureBatchRvtSettings(batchRvtConfig, batchRvtSettings, output):
     batchRvtConfig.BatchRevitTaskRevitVersion = batchRvtSettings.BatchRevitTaskRevitVersion.GetValue()
     batchRvtConfig.AuditOnOpening = batchRvtSettings.AuditOnOpening.GetValue()
     batchRvtConfig.OpenInUI = batchRvtSettings.OpenInUI.GetValue()
+    batchRvtConfig.KeepFileListOrdering = batchRvtSettings.KeepFileListOrdering.GetValue()
 
     if not File.Exists(batchRvtConfig.ScriptFilePath):
         output()
